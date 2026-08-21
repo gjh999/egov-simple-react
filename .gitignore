@@ -1,0 +1,31 @@
+# ── 의존성 ───────────────────────────────────────────────────
+node_modules/
+.pnpm-store/
+
+# ── 빌드 산출물 ──────────────────────────────────────────────
+dist/
+dist-ssr/
+# TypeScript 증분 빌드 캐시
+*.tsbuildinfo
+
+# ── 시크릿 · 로컬 설정 (절대 커밋 금지) ──────────────────────
+# .env.development 는 백엔드 프록시 주소만 담아 커밋 대상이다
+.env
+.env.local
+.env.*.local
+!.env.development
+*.pem
+*.key
+
+# ── 테스트 · 로그 ────────────────────────────────────────────
+coverage/
+*.log
+npm-debug.log*
+yarn-error.log*
+
+# ── IDE · OS ─────────────────────────────────────────────────
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db

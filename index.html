@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>전자정부표준프레임워크 심플 홈페이지</title>
+
+    <!--
+      KRDS (Korea Design System · 디지털정부 표준 디자인 시스템, 행정안전부)
+      https://www.krds.go.kr  |  로컬 자산만 사용 (CDN 금지 정책)
+      로드 순서를 지켜야 한다: bootstrap-icons → krds.min.css(공식) → common.css
+                              → krds-compat.css(그리드/유틸 호환 레이어) → krds.css(최종 권위)
+    -->
+    <!-- Pretendard GOV 폰트 프리로드 (글꼴 교체 깜빡임 최소화) -->
+    <link rel="preload" href="/krds/resources/fonts/PretendardGOV-Regular.subset.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/krds/resources/fonts/PretendardGOV-Medium.subset.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/krds/resources/fonts/PretendardGOV-Bold.subset.woff2" as="font" type="font/woff2" crossorigin />
+
+    <link rel="stylesheet" href="/css/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="/krds/resources/cdn/krds.min.css" />
+    <link rel="stylesheet" href="/css/common.css" />
+    <link rel="stylesheet" href="/css/krds-compat.css" />
+    <link rel="stylesheet" href="/css/krds.css" />
+  </head>
+  <body class="egov-body">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
