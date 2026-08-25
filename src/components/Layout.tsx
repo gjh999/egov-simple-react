@@ -6,6 +6,7 @@ import { useI18n } from '../i18n/I18nContext'
 /** 공지사항·갤러리 게시판 ID — 백엔드 시드 데이터 기준 */
 const NOTICE_BBS_ID = 'BBSMSTR_AAAAAAAAAAAA'
 const GALLERY_BBS_ID = 'BBSMSTR_BBBBBBBBBBBB'
+const REFERENCE_BBS_ID = 'BBSMSTR_CCCCCCCCCCCC'
 
 export function Layout() {
   const { t } = useI18n()
@@ -133,6 +134,11 @@ function MainNav() {
               </NavLink>
             </li>
             <li className="nav-item">
+              <NavLink to="/info/about" className={linkClass} onClick={() => setOpen(false)}>
+                {t('nav.introGroup', '사이트 소개')}
+              </NavLink>
+            </li>
+            <li className="nav-item">
               <NavLink to={`/board/${NOTICE_BBS_ID}`} className={linkClass} onClick={() => setOpen(false)}>
                 {t('nav.notice', '공지사항')}
               </NavLink>
@@ -140,6 +146,11 @@ function MainNav() {
             <li className="nav-item">
               <NavLink to={`/board/${GALLERY_BBS_ID}`} className={linkClass} onClick={() => setOpen(false)}>
                 {t('nav.gallery', '갤러리')}
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink to={`/board/${REFERENCE_BBS_ID}`} className={linkClass} onClick={() => setOpen(false)}>
+                {t('nav.reference', '자료실')}
               </NavLink>
             </li>
             <li className="nav-item">
@@ -224,4 +235,4 @@ function ScrollTopButton() {
   )
 }
 
-export { NOTICE_BBS_ID, GALLERY_BBS_ID }
+export { NOTICE_BBS_ID, GALLERY_BBS_ID, REFERENCE_BBS_ID }

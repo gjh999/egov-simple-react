@@ -3,6 +3,7 @@ import type { FormEvent } from 'react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import { useI18n } from '../i18n/I18nContext'
+import { SnsLoginButtons } from '../components/SnsLoginButtons'
 import { ApiError } from '../api/client'
 
 interface LocationState {
@@ -95,6 +96,8 @@ export function LoginPage() {
                 {submitting ? t('com.processing', '처리 중…') : t('login.submit', '로그인')}
               </button>
             </form>
+
+            <SnsLoginButtons />
           </div>
         </div>
       </div>

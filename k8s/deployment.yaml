@@ -1,0 +1,55 @@
+# egov-simple-react 배포 예시.
+#
+# 이미지 안의 nginx 가 정적 번들을 서비스하고 /api 를 백엔드로 넘긴다.
+# 백엔드 주소는 BACKEND_URL 로 정하며, 같은 네임스페이스의 Service 이름을 쓴다.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: egov-simple-react
+  labels:
+    app: egov-simple-react
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: egov-simple-react
+  template:
+    metadata:
+      labels:
+        app: egov-simple-react
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101
+      containers:
+        - name: web
+          image: egov-simple-react:1.0.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: BACKEND_URL
+              value: "http://egov-simple-api:8090"
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]

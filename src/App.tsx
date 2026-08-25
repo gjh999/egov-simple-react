@@ -5,6 +5,8 @@ import { RequireAuth } from './auth/RequireAuth'
 import { Layout, NOTICE_BBS_ID } from './components/Layout'
 import { MainPage } from './pages/MainPage'
 import { LoginPage } from './pages/LoginPage'
+import { SnsCallbackPage } from './pages/SnsCallbackPage'
+import { InfoPage } from './pages/InfoPage'
 import { RegisterPage } from './pages/RegisterPage'
 import { BoardListPage } from './pages/BoardListPage'
 import { BoardDetailPage } from './pages/BoardDetailPage'
@@ -29,7 +31,14 @@ export function App() {
           <Routes>
             <Route element={<Layout />}>
               <Route index element={<MainPage />} />
-              <Route path="login" element={<LoginPage />} />
+              {/* 사이트 소개 — 슬러그별 문구는 서버 메시지 번들에서 온다 */}
+            <Route path="info">
+              <Route index element={<Navigate to="/info/about" replace />} />
+              <Route path=":slug" element={<InfoPage />} />
+            </Route>
+            <Route path="login" element={<LoginPage />} />
+            {/* SNS 공급자가 되돌려보내는 주소. 백엔드 Sns.*.callbackUrl 과 같아야 한다. */}
+            <Route path="login/:provider/callback" element={<SnsCallbackPage />} />
               <Route path="register" element={<RegisterPage />} />
 
               {/* 게시판 — 목록·상세는 비로그인도 볼 수 있고, 쓰기는 로그인이 필요하다

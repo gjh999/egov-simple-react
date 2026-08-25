@@ -7,9 +7,9 @@
 
 | 저장소 | 역할 | 개발 포트 |
 |---|---|---|
-| [egov-simple-api](https://github.com/gjh999/egov-simple-api) | REST API 백엔드 | 8080 (`/api`) |
-| **egov-simple-react** (이 저장소) | React 19 프론트 | 5173 |
-| [egov-simple-vue](https://github.com/gjh999/egov-simple-vue) | Vue 3 프론트 (짝) | 5174 |
+| [egov-simple-api](https://github.com/gjh999/egov-simple-api) | REST API 백엔드 | 8090 (`/api`) |
+| **egov-simple-react** (이 저장소) | React 19 프론트 | 3000 |
+| [egov-simple-vue](https://github.com/gjh999/egov-simple-vue) | Vue 3 프론트 (짝) | 3001 |
 
 두 프론트는 같은 백엔드·같은 메시지 번들·같은 KRDS 자산을 쓰며 기능이 서로 대등합니다.
 
@@ -17,7 +17,29 @@
 > 저장소가 분리돼 있어 자동으로 맞춰지지 않습니다 — 한쪽만 고치면 두 화면이 다르게 동작합니다.
 > 동기화 대상과 절차는 [`src/api/CONTRACT.md`](src/api/CONTRACT.md) 를 보세요. (공유 파일 8개)
 
+## 화면
+
+### 메인
+
+![메인](docs/screenshots/01-main.png)
+
+### 게시판
+
+![게시판](docs/screenshots/02-board.png)
+
+### 로그인
+
+![로그인](docs/screenshots/03-login.png)
+
+### 사이트 소개
+
+![사이트 소개](docs/screenshots/04-info.png)
+
+> 위 화면은 이 저장소를 실제로 기동해 촬영한 것입니다.
+> 같은 시점의 기능 점검 결과(**4 / 4 통과**)는 [docs/VERIFICATION.md](docs/VERIFICATION.md) 에 있습니다.
+
 ---
+
 
 ## 1. 빠른 시작
 
@@ -27,13 +49,13 @@
 
 ```bash
 npm install
-npm run dev     # http://localhost:5173
+npm run dev     # http://localhost:3000
 ```
 
 **백엔드가 먼저 떠 있어야 합니다.** [egov-simple-api](https://github.com/gjh999/egov-simple-api) 를 클론해
-`mvn spring-boot:run` 으로 8080 포트에 띄우세요.
+`mvn spring-boot:run` 으로 8090 포트에 띄우세요.
 
-개발 서버는 `/api` 요청을 `http://localhost:8080` 으로 프록시합니다(`vite.config.ts`).
+개발 서버는 `/api` 요청을 `http://localhost:8090` 으로 프록시합니다(`vite.config.ts`).
 프록시를 쓰면 브라우저에서 동일 출처로 보여 **쿠키가 SameSite 제약 없이 실립니다.**
 
 백엔드 주소를 바꾸려면 `.env.development` 의 `VITE_API_BASE` 와 `vite.config.ts` 의 프록시 target 을 함께 수정하세요.
@@ -52,17 +74,31 @@ npm run dev     # http://localhost:5173
 | 사용자 화면 | 관리자 화면 |
 |---|---|
 | 메인 | 회원 관리 |
-| 로그인 · 회원가입 | 게시판 관리 |
-| 게시판 (목록·상세·등록·수정·답변) | 게시판 사용정보 |
-| 일정 (월별 목록·등록·수정·삭제) | 관리자 비밀번호 변경 |
+| 로그인 (SNS 간편 로그인 포함) · 회원가입 | 게시판 관리 |
+| 사이트 소개 (소개 · 연혁 · 조직 · 찾아오시는 길) | 게시판 사용정보 |
+| 게시판 — 공지사항 · 갤러리 · 자료실 (목록·상세·등록·수정·답변) | 관리자 비밀번호 변경 |
+| 일정 (월간 · 주간 · 일간 보기, 등록·수정·삭제) | |
 | 마이페이지 | |
+
+게시판은 화면 하나가 게시판 ID 를 받아 그린다 — 공지사항·갤러리·자료실이 같은 화면을 쓴다.
+게시판을 새로 만들어도 화면을 더할 필요가 없다.
 
 SPA 관례에 맞춰 **목록·등록·수정 세 화면을 목록 + 인라인 폼 하나로 합쳤습니다** —
 화면을 오갈 때마다 목록을 다시 불러오고 검색 조건·페이지를 잃는 흐름을 없애기 위해서입니다.
 
-서버 렌더링(Thymeleaf) 판에만 있고 옮기지 않은 것은 **SPA 에서 다른 방식으로 대체되는 것들**입니다:
+서버 렌더링 판에만 있고 옮기지 않은 것은 **SPA 에서 다른 방식으로 대체되는 것들**입니다:
 레이아웃·프래그먼트(라우터 레이아웃), 에러 페이지(전역 오류 표시), 달력 팝업(`<input type="date">`),
 파일 업로더 위젯(각 폼에 통합).
+
+### SNS 간편 로그인
+
+카카오·네이버 로그인을 지원합니다. **공급자 키는 백엔드에만 둡니다** — 이 프론트에는
+클라이언트 ID 가 없고, 인증 시작·state 발급·토큰 교환을 모두 백엔드가 합니다.
+
+1. 백엔드 `application.properties` 의 `Sns.kakao.clientId` · `Sns.naver.clientId` 등에 키를 넣습니다.
+2. 이 저장소의 `.env.development` 에서 `VITE_SNS_ENABLED=true` 로 바꿉니다.
+
+기본값은 **꺼짐**입니다. 키가 없는 상태에서 버튼만 보이면 눌렀을 때 공급자 오류 화면으로 빠지기 때문입니다.
 
 ---
 
@@ -129,12 +165,25 @@ location / {
     try_files $uri $uri/ /index.html;
 }
 location /api/ {
-    proxy_pass http://127.0.0.1:8080;
+    proxy_pass http://127.0.0.1:8090;
     proxy_set_header Host $host;
 }
 ```
 
 프론트와 API 를 **같은 도메인**에 두면(위 설정처럼 `/api` 를 프록시) 쿠키 문제가 생기지 않습니다.
+
+### 컨테이너로 실행
+
+저장소에 `Dockerfile` 과 `k8s/` 매니페스트가 들어 있습니다.
+이미지는 **정적 번들 + nginx** 구성이고, nginx 가 `/api` 를 백엔드로 넘깁니다.
+
+```bash
+docker build -t egov-simple-react:latest .
+docker run --rm -p 3000:8080 -e BACKEND_URL=http://host.docker.internal:8090 egov-simple-react:latest
+```
+
+세 저장소를 한 번에 띄우려면 [egov-simple-api](https://github.com/gjh999/egov-simple-api) 의
+`docker-compose.yml` 을 쓰세요 — 백엔드 1 + 프론트 2 가 함께 뜹니다.
 도메인을 분리한다면 백엔드에서 `JWT_COOKIE_SAMESITE=None` + `JWT_COOKIE_SECURE=true`(HTTPS) +
 CORS 화이트리스트가 **모두** 필요합니다.
 
@@ -143,6 +192,7 @@ CORS 화이트리스트가 **모두** 필요합니다.
 ## 5. 테스트
 
 ```bash
+npm run lint    # ESLint
 npm run test    # Vitest 11건
 ```
 
@@ -201,8 +251,12 @@ src/
 화면 문구의 원본은 **백엔드**([egov-simple-api](https://github.com/gjh999/egov-simple-api))의
 `message-ui_{ko,en}.properties` 입니다. 앱 시작 시 `GET /api/i18n/{lang}` 으로 받아 씁니다.
 
-문구를 이 저장소에 박아 두면 짝 저장소와 갈라지므로, `t('key', '기본값')` 형태로 쓰고
-**실제 문구는 백엔드 메시지 파일에 추가**하세요. 두 번째 인자는 번들을 받지 못했을 때의 대비값입니다.
+문구는 `t('key', '기본값')` 형태로 씁니다. 두 번째 인자는 번들에 키가 없을 때 쓰이는 대비값입니다.
+
+> 화면 문구 키 153 개 중 **150 개(98%)** 가 번들에 등록돼 있어 언어 전환이 실제로 동작합니다.
+> 나머지 2 개는 첨부 최대 개수처럼 **값이 끼어드는 문구**라, 번들로 옮기려면 자리표시자 치환이 필요합니다. 대비값으로 둡니다.
+
+문구를 이 저장소에 박아 두면 짝 저장소와 갈라집니다. **새 문구는 백엔드 메시지 파일에 추가**하세요.
 
 ---
 
